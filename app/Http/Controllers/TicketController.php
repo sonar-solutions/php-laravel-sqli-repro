@@ -16,6 +16,17 @@ class TicketController
             ->get();
     }
 
+    public function vulnerableJoin(Request $request)
+    {
+        $search = $request->get('search');
+
+        return DB::table('tickets')
+            ->join('customers', 'customers.id', '=', 'tickets.customer_id')
+            ->whereRaw("customers.display_name LIKE '%$search%' OR customers.default_email LIKE '%$search%'")
+            ->select('tickets.*')
+            ->get();
+    }
+
     public function safe(Request $request)
     {
         $search = '%' . $request->get('search') . '%';

@@ -27,6 +27,17 @@ class TicketController
             ->get();
     }
 
+    public function searchTickets(Request $request, $query)
+    {
+        $search = $request->get('search');
+
+        $query->join('customers', 'customers.id', '=', 'tickets.customer_id')
+            ->whereRaw("customers.display_name LIKE '%$search%' OR customers.default_email LIKE '%$search%'")
+            ->select('tickets.*');
+
+        return $query;
+    }
+
     public function safe(Request $request)
     {
         $search = '%' . $request->get('search') . '%';
